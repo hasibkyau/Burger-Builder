@@ -66,7 +66,7 @@ class BurgerBuilder extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <NavLink to="/checkout" className="NavLink">
-                            <Button color='success' onClick={this.handleCheckout}>Continue to checkout</Button>
+                            <Button style={{backgroundColor: "#D70F64", marginBottom:"5px"}}>Continue to checkout</Button>
                         </NavLink>
                         <Button color='secondary' onClick={this.toggleModal}>Close</Button>
                     </ModalFooter>
