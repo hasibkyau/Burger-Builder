@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, CardBody, CardFooter, CardHeader, Button } from 'reactstrap';
 
 const controls = [
-    { label: 'Salad', type: 'salad' },
-    { label: 'Cheese', type: 'cheese' },
-    { label: 'Meat', type: 'meat' },
+    { label: 'Salad', type: 'salad', price: 20 },
+    { label: 'Cheese', type: 'cheese', price: 40 },
+    { label: 'Meat', type: 'meat', price: 90 },
 ]
 
 const BuildControl = props => {
@@ -13,7 +13,7 @@ const BuildControl = props => {
             <div className='row'>
 
                 <div className='col-6'>
-                    <div className="ml-5" style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign:"left" }}>{props.label}</div>
+                    <div className="ml-5" style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign:"left" }}>{props.label}:({props.price}BDT)</div>
                 </div>
 
                 <div className='col-6'>
@@ -48,11 +48,12 @@ const Controls = props => {
                                 key={Math.random()}
                                 added = {()=>props.ingredientAdded(item.type)}
                                 remove = {()=>props.ingredientRemove(item.type)}
+                                price = {item.price}
                             />
                         })
                     }
                 </CardBody>
-                <CardFooter><h5>Price: BDT</h5></CardFooter>
+                <CardFooter><h5>Price:<strong>{props.totalPrice}</strong> BDT</h5></CardFooter>
             </Card>
         </div>
     )
