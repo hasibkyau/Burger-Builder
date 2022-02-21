@@ -3,6 +3,8 @@ import Burger from './Burger/Burger';
 import Controls from './Controls/Controls';
 import { Modal, ModalBody, ModalHeader, ModalFooter, Button } from 'reactstrap';
 import Summary from './Summary/Summary';
+import { NavLink } from 'react-router-dom';
+import Checkout from '../Orders/Checkout/Checkout';
 
 const INGREDIENT_PRICES = {
     salad: 20,
@@ -32,7 +34,7 @@ export default class BurgerBuilder extends Component {
                 }
             };
         }
-        this.setState({ingredients: ingredients});
+        this.setState({ ingredients: ingredients });
         this.updatePurchasable(ingredients);
     }
 
@@ -48,23 +50,32 @@ export default class BurgerBuilder extends Component {
                 }
             }
         }
-        this.setState({ingredients: ingredients });
+        this.setState({ ingredients: ingredients });
         this.updatePurchasable(ingredients);
     }
 
-    toggleModal = () =>{
+    toggleModal = () => {
         this.setState({
-            modalOpen : !this.state.modalOpen,
+            modalOpen: !this.state.modalOpen,
         })
     }
 
-    updatePurchasable = ingredient =>{
+    updatePurchasable = ingredient => {
         const sum = ingredient.reduce((sum, element) => {
             return sum + element.amount;
         }, 0);
         this.setState({
             purchasable: sum > 0
         })
+    }
+
+    handleCheckout = () => {
+
+    }
+
+    componentDidMount() {
+        // console.log(this.props.history.push("/checkout"));
+        console.log(this.props);
     }
 
     render() {
@@ -76,20 +87,22 @@ export default class BurgerBuilder extends Component {
                         ingredientAdded={this.addIngredientHandle}
                         ingredientRemove={this.removeIngredientHandle}
                         totalPrice={this.state.totalPrice}
-                        toggleModal = {this.toggleModal}
-                        purchasable = {this.state.purchasable}
+                        toggleModal={this.toggleModal}
+                        purchasable={this.state.purchasable}
                     />
                 </div>
 
-                <Modal isOpen = {this.state.modalOpen}>
+                <Modal isOpen={this.state.modalOpen}>
                     <ModalHeader>Your Order Sumumary</ModalHeader>
                     <ModalBody>
                         <h5>Total Price: {this.state.totalPrice.toFixed(0)} BDT</h5>
-                        <Summary ingredients = {this.state.ingredients}/>
+                        <Summary ingredients={this.state.ingredients} />
                     </ModalBody>
                     <ModalFooter>
-                        <Button color='success' onClick={this.toggleModal}>Continue to checkout</Button>
-                        <Button color = 'secondary' onClick={this.toggleModal}>Close</Button>
+                        <NavLink to="/checkout" className="NavLink">
+                            <Button color='success' onClick={this.handleCheckout}>Continue to checkout</Button>
+                        </NavLink>
+                        <Button color='secondary' onClick={this.toggleModal}>Close</Button>
                     </ModalFooter>
                 </Modal>
             </div>
