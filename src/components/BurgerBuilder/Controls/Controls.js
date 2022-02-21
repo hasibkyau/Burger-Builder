@@ -17,8 +17,8 @@ const BuildControl = props => {
                 </div>
 
                 <div className='col-6'>
-                    <button className="btn btn-danger btn-sm m-1">Less</button>
-                    <button className="btn btn-success btn-sm m-1">More</button>
+                    <button onClick={props.remove} className="btn btn-danger btn-sm m-1">Less</button>
+                    <button onClick={props.added} className="btn btn-success btn-sm m-1">More</button>
                 </div>
 
             </div>
@@ -46,6 +46,8 @@ const Controls = props => {
                                 label={item.label}
                                 type={item.type}
                                 key={Math.random()}
+                                added = {()=>props.ingredientAdded(item.type)}
+                                remove = {()=>props.ingredientRemove(item.type)}
                             />
                         })
                     }
