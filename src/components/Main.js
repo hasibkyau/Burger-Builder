@@ -1,14 +1,16 @@
-import React from "react";
-import Header from "./Header/Header";
-import BurgerBuilder from "./BurgerBuilder/BurgerBuilder";
+import React from 'react';
+import Header from './Header/Header';
+import BurgerBuilder from './BurgerBuilder/BurgerBuilder';
 
-const Main = (props) =>{
-    return(
+const Main = props => {
+    return (
         <div>
-            <Header/>
-            <BurgerBuilder/>
+            <Header />
+            <div className="container">
+                <BurgerBuilder />
+            </div>
         </div>
-    );
+    )
 }
 
 export default Main;
