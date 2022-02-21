@@ -19,3 +19,9 @@ export const updatePurchasable = igType =>{
         type: actionTypes.UPDATE_PURCHASABLE,
     }
 }
+
+export const resetIngredients = () =>{
+    return{
+        type: actionTypes.RESET_INGREDIENTS,
+    }
+}

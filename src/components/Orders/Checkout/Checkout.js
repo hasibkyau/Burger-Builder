@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import Spinner from "../../Spinner/Spinner";
+import { Modal, ModalBody } from "reactstrap";
+import { resetIngredients } from "../../../Redux/actionCreators";
 
 const mapStateToProps = state => {
     return {
@@ -13,15 +15,24 @@ const mapStateToProps = state => {
     }
 }
 
+const mapDispatchToProps = dispatch =>{
+    return{
+        resetIngredients: ()=>dispatch(resetIngredients()),
+    }
+
+}
+
 class Checkout extends Component {
     state = {
         values: {
             deliveryAddress: "",
             phone: "",
             paymentType: "Cash On Delivery",
-            
+
         },
         isLoading: false,
+        isModalOpen: false,
+        modalMsg: "",
     }
     inputChangeHandle = (e) => {
         this.setState({
@@ -43,60 +54,75 @@ class Checkout extends Component {
             orderTime: new Date()
         }
         axios.post("https://burger-builder-723e2-default-rtdb.firebaseio.com/orders.json", order)
-        .then(response=>{
-            if(response === 200){
-                this.setState({
-                    isLoading: false,
-                })
-            }
-            else{
-                this.setState({
-                    isLoading: false,
-                })
-            }
-        })
-        .catch(err => {
-            this.setState({
-                isLoading: false,
+            .then(response => {
+                if (response === 200) {
+                    this.setState({
+                        isLoading: false,
+                        isModalOpen: true,
+                        modalMsg: "Order Placed Successfully!",
+                    })
+                    this.props.resetIngredients();
+                }
+                else {
+                    this.setState({
+                        isLoading: false,
+                        isModalOpen: true,
+                        modalMsg: "Something went wrong! Order Again",
+                    })
+                }
             })
-        })
-       // console.log(order);
+            .catch(err => {
+                this.setState({
+                    isLoading: false,
+                    isModalOpen: true,
+                    modalMsg: "Check your internet connection and try again",
+                })
+            })
+        // console.log(order);
     }
     render() {
-        let form = <div> 
+        let form = <div>
             <h4 style={{
-            border: "1px solid gray",
-            boxShadow: "1px 1px #888888",
-            borderRadious: "5px",
-            padding: "20px"
-        }}> Payment: {this.props.totalPrice} BDT </h4>
+                border: "1px solid gray",
+                boxShadow: "1px 1px #888888",
+                borderRadious: "5px",
+                padding: "20px"
+            }}> Payment: {this.props.totalPrice} BDT </h4>
 
-        <form style={{
-            border: "1px solid gray",
-            boxShadow: "1px 1px #888888",
-            borderRadious: "5px",
-            padding: "20px"
-        }}>
-            <textarea onChange={(e) => this.inputChangeHandle(e)} className="form-control" placeholder="Your Address" name="deliveryAddress" value={this.state.values.deliveryAddress}></textarea>
-            <br />
-            <input onChange={(e) => this.inputChangeHandle(e)} className="form-control" placeholder="Your Phone Number" name="phone" className="form-control" value={this.state.values.phone}></input>
-            <br />
-            <select onChange={(e) => this.inputChangeHandle(e)} name="paymentType" className="form-control" value={this.state.values.paymentType}>
-                <option value="Cash On Delivery">Cash On Delivery</option>
-                <option value="bKash">Bkash</option>
-            </select>
-            <br />
-            <Button onClick={this.submitHandler} className="mr-auto" disabled = {!this.props.purchasable} style={{ backgroundColor: "#D70F64" }}>Place Order</Button>
-            <Link to="/" className="btn btn-secondary m-1">Cancel</Link>
-        </form>
+            <form style={{
+                border: "1px solid gray",
+                boxShadow: "1px 1px #888888",
+                borderRadious: "5px",
+                padding: "20px"
+            }}>
+                <textarea onChange={(e) => this.inputChangeHandle(e)} className="form-control" placeholder="Your Address" name="deliveryAddress" value={this.state.values.deliveryAddress}></textarea>
+                <br />
+                <input onChange={(e) => this.inputChangeHandle(e)} className="form-control" placeholder="Your Phone Number" name="phone" className="form-control" value={this.state.values.phone}></input>
+                <br />
+                <select onChange={(e) => this.inputChangeHandle(e)} name="paymentType" className="form-control" value={this.state.values.paymentType}>
+                    <option value="Cash On Delivery">Cash On Delivery</option>
+                    <option value="bKash">Bkash</option>
+                </select>
+                <br />
+                <Button onClick={this.submitHandler} className="mr-auto" disabled={!this.props.purchasable} style={{ backgroundColor: "#D70F64" }}>Place Order</Button>
+                <Link to="/" className="btn btn-secondary m-1">Cancel</Link>
+            </form>
         </div>
         return (
-           
+
             <div>
-               {this.state.isLoading ? <Spinner/> : form}
+                {this.state.isLoading ? <Spinner /> : form}
+                
+                    <Modal isOpen={this.state.isModalOpen}>
+                        <ModalBody>
+                            <p>{this.state.modalMsg}</p>
+                            <Link className="btn btn-danger" to="/" >Try Again</Link>
+                        </ModalBody>
+                    </Modal>
+  
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps)(Checkout);
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
