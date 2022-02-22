@@ -17,6 +17,8 @@ const INITIAL_STATE = {
     orderErr: false,
     totalPrice: 80,
     purchasable: false,
+    token: null,
+    userId: null,
 }
 
 export const reducer = (state = INITIAL_STATE, action) => {
@@ -26,7 +28,7 @@ export const reducer = (state = INITIAL_STATE, action) => {
         case actionTypes.ADD_INGREDIENT:
             for (let item of ingredients) {
                 if (item.type === action.payLoad) {
-                    if(item.amount < 5){
+                    if (item.amount < 5) {
                         item.amount++;
                         state.totalPrice = state.totalPrice + INGREDIENT_PRICES[action.payLoad];
                     }
@@ -43,23 +45,23 @@ export const reducer = (state = INITIAL_STATE, action) => {
                     if (item.amount != 0) {
                         item.amount--;
                         state.totalPrice = state.totalPrice - INGREDIENT_PRICES[action.payLoad];
-                    } 
+                    }
                 }
             }
-            return{
+            return {
                 ...state,
-                ingredients: ingredients,        
+                ingredients: ingredients,
             }
         case actionTypes.UPDATE_PURCHASABLE:
-            const sum = state.ingredients.reduce((sum, Element)=>{
+            const sum = state.ingredients.reduce((sum, Element) => {
                 return sum + Element.amount;
-            },0)
-            return{
+            }, 0)
+            return {
                 ...state,
                 purchasable: sum > 0,
             }
         case actionTypes.RESET_INGREDIENTS:
-            return{
+            return {
                 ...state,
                 ingredients: [
                     { type: 'salad', amount: 0 },
@@ -71,22 +73,28 @@ export const reducer = (state = INITIAL_STATE, action) => {
             }
         case actionTypes.LOAD_ORDERS:
             let orders = [];
-            for(let key in action.payLoad){
+            for (let key in action.payLoad) {
                 orders.push({
                     ...action.payLoad[key],
                     id: key,
                 })
             }
-            return{
+            return {
                 ...state,
                 orders: orders,
                 orderLoading: false,
             }
         case actionTypes.ORDER_LOAD_FAILED:
-            return{
+            return {
                 ...state,
                 orderErr: true,
                 orderLoading: false,
+            }
+        case actionTypes.AUTH_SUCCESS:
+            return {
+                ...state,
+                token: action.payLoad.token,
+                userId: action.payLoad.userId
             }
         default:
             return state;
