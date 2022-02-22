@@ -12,6 +12,9 @@ const INITIAL_STATE = {
         { type: 'cheese', amount: 0 },
         { type: 'meat', amount: 0 },
     ],
+    orders: [],
+    orderLoading: true,
+    orderErr: false,
     totalPrice: 80,
     purchasable: false,
 }
@@ -65,6 +68,25 @@ export const reducer = (state = INITIAL_STATE, action) => {
                 ],
                 totalPrice: 80,
                 purchasable: false,
+            }
+        case actionTypes.LOAD_ORDERS:
+            let orders = [];
+            for(let key in action.payLoad){
+                orders.push({
+                    ...action.payLoad[key],
+                    id: key,
+                })
+            }
+            return{
+                ...state,
+                orders: orders,
+                orderLoading: false,
+            }
+        case actionTypes.ORDER_LOAD_FAILED:
+            return{
+                ...state,
+                orderErr: true,
+                orderLoading: false,
             }
         default:
             return state;
