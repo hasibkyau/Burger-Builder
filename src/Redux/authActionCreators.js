@@ -1,12 +1,12 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
-export const authSuccess = (token, userID) =>{
-    return{
+export const authSuccess = (token, userId) => {
+    return {
         type: actionTypes.AUTH_SUCCESS,
-        payLoad: {
+        payload: {
             token: token,
-            userID: userID,
+            userId: userId,
         }
     }
 }
@@ -29,25 +29,34 @@ export const auth = (email, password, mode) => dispatch => {
         .then(response => {
             localStorage.setItem('token', response.data.idToken);
             localStorage.setItem('userId', response.data.localId);
-            const expirationTime = new Date (new Date().getTime() + response.data.expiresIn * 1000);
+            const expirationTime = new Date(new Date().getTime() + response.data.expiresIn * 1000);
             localStorage.setItem('expirationTime', expirationTime);
             dispatch(authSuccess(response.data.idToken, response.data.localId));
         })
 }
 
-export const authCheck = () => dispatch=>{
-    const token = localStorage.getItem('token');
-    if(!token){
-        //logout
-    } else{
-        const expirationTime = new Date(localStorage.getItem('expirationTime'));
+export const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('expirationTime');
+    localStorage.removeItem('userId');
+    return {
+        type: actionTypes.AUTH_LOGOUT,
+    }
+}
 
+export const authCheck = () => dispatch => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        // Logout
+        dispatch(logout());
+    } else {
+        const expirationTime = new Date(localStorage.getItem('expirationTime'));
         if (expirationTime <= new Date()) {
-            //logout
+            // Logout
+            dispatch(logout());
         } else {
-            //valid auth
-            const userID = localStorage.getItem('userId');
-            dispatch(authSuccess(token, userID));
+            const userId = localStorage.getItem('userId');
+            dispatch(authSuccess(token, userId));
         }
     }
 }

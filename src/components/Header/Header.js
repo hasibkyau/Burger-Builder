@@ -1,34 +1,46 @@
 import React from 'react';
-import './header.css';
-import {Navbar, NavbarBrand, Nav, NavItem } from 'reactstrap';
-import {NavLink} from 'react-router-dom'
+import './Header.css';
+import { NavLink } from 'react-router-dom';
+import {
+    Navbar,
+    NavbarBrand,
+    Nav,
+    NavItem,
+} from 'reactstrap';
 import Logo from '../../assets/logo.png';
+
 import { connect } from 'react-redux';
 
-const mapStateToprops = state =>{
-    return{
+const mapStateToProps = state => {
+    return {
         token: state.token,
     }
 }
 
-const Header = (props) => {
+const Header = props => {
     let links = null;
-    if(props.token === null){
-        links = <Nav className="mr-md-5">
-        <NavItem>
-            <NavLink to="/login" className="NavLink">Login</NavLink>
-        </NavItem>
-    </Nav>
-
+    if (props.token === null) {
+        links = (
+            <Nav className="mr-md-5">
+                <NavItem>
+                    <NavLink exact to="/login" className="NavLink">Login</NavLink>
+                </NavItem>
+            </Nav>
+        )
     } else {
-        links = <Nav className="mr-md-5">
-        <NavItem>
-            <NavLink to="/" className="NavLink">Burger Builder</NavLink>
-        </NavItem>
-        <NavItem>
-            <NavLink to="/orders" className="NavLink">Orders</NavLink>
-        </NavItem>
-    </Nav>
+        links = (
+            <Nav className="mr-md-5">
+                <NavItem>
+                    <NavLink exact to="/" className="NavLink">Burger Builder</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink exact to="/orders" className="NavLink">Orders</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink exact to="/logout" className="NavLink">Logout</NavLink>
+                </NavItem>
+            </Nav>
+        )
     }
     return (
         <div className="Navigation">
@@ -45,4 +57,4 @@ const Header = (props) => {
     )
 }
 
-export default connect(mapStateToprops)(Header);
+export default connect(mapStateToProps)(Header);

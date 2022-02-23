@@ -2,26 +2,17 @@ import React from 'react';
 import { Card, CardBody, CardFooter, CardHeader, Button } from 'reactstrap';
 
 const controls = [
-    { label: 'Salad', type: 'salad', price: 20 },
-    { label: 'Cheese', type: 'cheese', price: 40 },
-    { label: 'Meat', type: 'meat', price: 90 },
+    { label: 'Salad', type: 'salad' },
+    { label: 'Cheese', type: 'cheese' },
+    { label: 'Meat', type: 'meat' },
 ]
 
 const BuildControl = props => {
     return (
-        <div className="container">
-            <div className='row'>
-
-                <div className='col-6'>
-                    <div className="ml-5" style={{ fontWeight: "bold", fontSize: "1.2rem", textAlign:"left" }}>{props.label}:({props.price}BDT)</div>
-                </div>
-
-                <div className='col-6'>
-                    <button onClick={props.remove} className="btn btn-danger btn-sm m-1">Less</button>
-                    <button onClick={props.added} className="btn btn-success btn-sm m-1">More</button>
-                </div>
-
-            </div>
+        <div className="d-flex">
+            <div className="mr-auto ml-5" style={{ fontWeight: "bold", fontSize: "1.2rem" }}>{props.label}</div>
+            <button className="btn btn-danger btn-sm m-1" onClick={props.removed}>Less</button>
+            <button className="btn btn-success btn-sm m-1" onClick={props.added}>More</button>
         </div>
     )
 }
@@ -46,16 +37,15 @@ const Controls = props => {
                                 label={item.label}
                                 type={item.type}
                                 key={Math.random()}
-                                added = {()=>props.ingredientAdded(item.type)}
-                                remove = {()=>props.ingredientRemove(item.type)}
-                                price = {item.price}
+                                added={() => props.ingredientAdded(item.type)}
+                                removed={() => props.ingredientRemoved(item.type)}
                             />
                         })
                     }
                 </CardBody>
-                <CardFooter><h5>Price:<strong>{props.totalPrice}</strong> BDT</h5></CardFooter>
+                <CardFooter><h5>Price: <strong>{props.price}</strong> BDT</h5></CardFooter>
+                <Button style={{ backgroundColor: "#D70F64" }} disabled={!props.purchasable} onClick={props.toggleModal}>Order Now</Button>
             </Card>
-            <Button  style={{backgroundColor: "#D70F64", width:"100%"}} disabled = {!props.purchasable} onClick={props.toggleModal}>Order Now</Button>
         </div>
     )
 }
