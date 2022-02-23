@@ -12,9 +12,16 @@ export const authSuccess = (token, userId) => {
 }
 
 export const authLoading = isLoading => {
-    return{
+    return {
         type: actionTypes.AUTH_LOADING,
         payload: isLoading,
+    }
+}
+
+export const authFailed = errMsg => {
+    return {
+        type: actionTypes.AUTH_FAILED,
+        payload: errMsg
     }
 }
 
@@ -42,9 +49,9 @@ export const auth = (email, password, mode) => dispatch => {
             localStorage.setItem('expirationTime', expirationTime);
             dispatch(authSuccess(response.data.idToken, response.data.localId));
         })
-        .catch(err =>{
-            console.log(err);
+        .catch(err => {
             dispatch(authLoading(false));
+            dispatch(authFailed(err.response.data.error.message))
         })
 }
 
